@@ -1,0 +1,131 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<div class="container">
+  <!--Enter the name of the product-->
+  <div class="row">
+    <div class="col-sm-3">
+      <label class="labelValue">
+        Product name:
+      </label>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle col-xs-10" type="button" data-toggle="dropdown">
+          {{dropdownValue}}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu scrollable-menu col-xs-10" role="menu">
+          <li>
+            <div class="item" (click)="submitProductName('Uber',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Uber   </div>
+          </li>
+          <hr>
+          <li>
+            <div class="item" (click)="submitProductName('Amazon',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Amazon   </div>
+          </li>
+          <hr>
+          <li>
+            <div class="item" (click)="submitProductName('Flipkart',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Flipkart   </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--Enter the no of runs that you want to see-->
+    <div class="col-sm-3" *ngIf="dropdownValue!== '-----Select-----'">
+      <label class="labelValue">
+        Number of runs:
+      </label>
+      <div class="dropdown" >
+        <button class="btn btn-primary dropdown-toggle col-xs-10" type="button" data-toggle="dropdown">
+          {{noOfRuns}}    <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu scrollable-menu col-xs-10" role="menu">
+          <li>
+            <div class="item" (click)="noOfRuns=1" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false" >1  </div>
+          </li>
+          <hr>
+          <li>
+            <div class="item" (click)="noOfRuns=2" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">2  </div>
+          </li>
+          <hr>
+          <li>
+            <div class="item" (click)="noOfRuns=3" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">3  </div>
+          </li>
+          <hr>
+          <li>
+            <div class="item" (click)="noOfRuns=4" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">4  </div>
+          </li>
+          <hr>
+          <li>
+            <div class="item" (click)="noOfRuns=5" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">5  </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </div>
+      <br />
+      <br />
+      <div class="btn-group" *ngIf="dropdownValue!== '-----Select-----'">
+        <button type="button" class="btn btn-primary" (click)="showBarChart()">Bar chart</button>
+        <button type="button" class="btn btn-primary" (click)="showPieChart()">Pie chart</button>
+      </div>
+      <br />
+      <br />
+      <br />
+      <div class="chart" *ngIf="report">
+        <!--Bar chart-->
+        <div class="{{showBar}}" *ngIf="chartDetailsUpdated">
+          <canvas baseChart
+                  [data]="chartData"
+                  [labels]="chartLabels"
+                  [options]="barChartOptions"
+                  [legend]="barChartLegend"
+                  [chartType]="chartType1"></canvas>
+        </div>
+        <br />
+        <!--Pie chart-->
+        <div class="{{showPie}}" *ngIf="chartDetailsUpdated">
+          <canvas baseChart
+                  [data]="chartData"
+                  [labels]="chartLabels"
+                  [options]="pieChartOptions"
+                  [chartType]="chartType2"></canvas>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="showHistory(dropdownValue)" (click)="compareTestcaseUpdated=false">View Details</button>
+        <br/>
+        <br/>
+        <div *ngIf="viewDetailsButton">
+          <button type="button" class="btn btn-primary" *ngIf="showMainChart" (click)="showTestcaseComparision(dropdownValue)">Show Testcase-wise Comparision</button>
+          <div class="chart" *ngIf="showComparisionChart">
+            <br />
+            <br />
+            <!--Testcase Comparision chart-->
+            <div class="{{showChart}}" *ngIf="compareTestcaseUpdated">
+              <canvas baseChart
+                      [data]="testcaseChartData"
+                      [labels]="testcaseChartLabels"
+                      [options]="testcaseChartOptions"
+                      [legend]="barChartLegend"
+                      [chartType]="chartType1"></canvas>
+            </div>
+          </div>
+        </div>
+        <table class="table table-hover table-sm" *ngIf="showMainChart">
+          <thead class="thead-dark">       
+            <tr>
+              <th scope="col">Run Number</th>
+              <th scope="col">Testcase Number</th>
+              <th scope="col">Run Status</th>
+              <th scope="col">Exception message</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let details of testcaseDetails">
+            <tr>
+              <td>{{details.runNumber}}</td>
+              <td>{{details.number}}</td>
+              <td>{{details.status}}</td>
+              <td>{{details.exceptionmessage}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+

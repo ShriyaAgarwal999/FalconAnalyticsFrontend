@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\falcon-analytics",
+    "\\src\\app\\models",
+    "\\src\\app\\services",
+    "\\src\\assets",
+    "\\src\\environments"
+  ],
+  "SelectedNode": "\\src\\app\\falcon-analytics\\falcon-analytics.component.html",
+  "PreviewInSolutionExplorer": false
+}
