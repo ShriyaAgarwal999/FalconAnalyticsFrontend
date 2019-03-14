@@ -10,6 +10,9 @@ import { ChartsModule } from 'ng2-charts';
 
 import {HttpClientModule} from "@angular/common/http";
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material.module'
+
 const appRoutes: Routes=[
 {path: '', component: AppComponent},
 {path: 'falcon-analytics', component: FalconAnalyticsComponent}
@@ -26,7 +29,9 @@ const appRoutes: Routes=[
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
-    ChartsModule
+    ChartsModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

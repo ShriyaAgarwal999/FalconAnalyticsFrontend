@@ -1,8 +1,8 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<div class="container">
-  <!--Enter the name of the product-->
+<div class="container"> 
+  <!--Product name dropdown-->
   <div class="row">
     <div class="col-sm-3">
       <label class="labelValue">
@@ -12,22 +12,22 @@
         <button class="btn btn-primary dropdown-toggle col-xs-10" type="button" data-toggle="dropdown">
           {{dropdownValue}}<span class="caret"></span>
         </button>
+        <div class="dropdown-content">
         <ul class="dropdown-menu scrollable-menu col-xs-10" role="menu">
           <li>
-            <div class="item" (click)="submitProductName('Uber',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Uber   </div>
+            <div (click)="submitProductName('Uber',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Uber   </div>
           </li>
-          <hr>
           <li>
-            <div class="item" (click)="submitProductName('Amazon',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Amazon   </div>
+            <div (click)="submitProductName('Amazon',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Amazon   </div>
           </li>
-          <hr>
           <li>
-            <div class="item" (click)="submitProductName('Flipkart',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Flipkart   </div>
+            <div (click)="submitProductName('Flipkart',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Flipkart   </div>
           </li>
         </ul>
+        </div>
       </div>
     </div>
-    <!--Enter the no of runs that you want to see-->
+    <!--No of runs dropdown-->
     <div class="col-sm-3" *ngIf="dropdownValue!== '-----Select-----'">
       <label class="labelValue">
         Number of runs:
@@ -36,36 +36,60 @@
         <button class="btn btn-primary dropdown-toggle col-xs-10" type="button" data-toggle="dropdown">
           {{noOfRuns}}    <span class="caret"></span>
         </button>
+        <div class="dropdown-content">
         <ul class="dropdown-menu scrollable-menu col-xs-10" role="menu">
           <li>
-            <div class="item" (click)="noOfRuns=1" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false" >1  </div>
+            <div (click)="noOfRuns=10" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false" >10  </div>
           </li>
-          <hr>
           <li>
-            <div class="item" (click)="noOfRuns=2" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">2  </div>
+            <div (click)="noOfRuns=20" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">20  </div>
           </li>
-          <hr>
           <li>
-            <div class="item" (click)="noOfRuns=3" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">3  </div>
+            <div (click)="noOfRuns=30" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">30  </div>
           </li>
-          <hr>
           <li>
-            <div class="item" (click)="noOfRuns=4" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">4  </div>
+            <div (click)="noOfRuns=40" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">40  </div>
           </li>
-          <hr>
           <li>
-            <div class="item" (click)="noOfRuns=5" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">5  </div>
+            <div (click)="noOfRuns=50" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">50  </div>
+          </li>
+          <li>
+            <div (click)="noOfRuns=60" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">60  </div>
+          </li>
+          <li>
+            <div (click)="noOfRuns=70" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">70  </div>
+          </li>
+          <li>
+            <div (click)="noOfRuns=80" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">80  </div>
+          </li>
+          <li>
+            <div (click)="noOfRuns=90" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">90  </div>
+          </li>
+          <li>
+            <div (click)="noOfRuns=100" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">100  </div>
           </li>
         </ul>
       </div>
+      </div>
     </div>
     </div>
       <br />
       <br />
-      <div class="btn-group" *ngIf="dropdownValue!== '-----Select-----'">
+      <div *ngIf="dropdownValue!== '-----Select-----'">
+        <!---
         <button type="button" class="btn btn-primary" (click)="showBarChart()">Bar chart</button>
         <button type="button" class="btn btn-primary" (click)="showPieChart()">Pie chart</button>
-      </div>
+      
+        <mat-button-toggle-group>
+            <mat-button-toggle (click)="showBarChart()">Bar chart</mat-button-toggle>
+            <mat-button-toggle (click)="showPieChart()">Pie chart</mat-button-toggle>
+        </mat-button-toggle-group>-->
+
+        <mat-button-toggle-group>        
+                <button mat-raised-button [color]="!showBar ? 'primary' : 'accent'" (click)="showBarChart()"  >Bar chart</button>
+                <button mat-raised-button [color]="!showPie ? 'primary' : 'accent'" (click)="showPieChart()"  >Pie chart</button>
+        </mat-button-toggle-group>
+    </div>
       <br />
       <br />
       <br />
@@ -88,11 +112,11 @@
                   [options]="pieChartOptions"
                   [chartType]="chartType2"></canvas>
         </div>
-        <button type="button" class="btn btn-primary" (click)="showHistory(dropdownValue)" (click)="compareTestcaseUpdated=false">View Details</button>
+        <button mat-raised-button [color]="showMainChart ? 'primary' : 'accent'" (click)="showHistory(dropdownValue)" (click)="compareTestcaseUpdated=false">View Details</button>
         <br/>
         <br/>
         <div *ngIf="viewDetailsButton">
-          <button type="button" class="btn btn-primary" *ngIf="showMainChart" (click)="showTestcaseComparision(dropdownValue)">Show Testcase-wise Comparision</button>
+          <button mat-raised-button [color]="showComparisionChart ? 'primary' : 'accent'" *ngIf="showMainChart" (click)="showTestcaseComparision(dropdownValue)">Show Testcase-wise Comparision</button>
           <div class="chart" *ngIf="showComparisionChart">
             <br />
             <br />
@@ -107,10 +131,13 @@
             </div>
           </div>
         </div>
-        <table class="table table-hover table-sm" *ngIf="showMainChart">
+        
+        <!--Table showing the details of the last runs-->
+        <table class="table table-hover table-sm header-fixed" *ngIf="showMainChart">
           <thead class="thead-dark">       
             <tr>
               <th scope="col">Run Number</th>
+              <th scope="col">Run session ID</th>
               <th scope="col">Testcase Number</th>
               <th scope="col">Run Status</th>
               <th scope="col">Exception message</th>
@@ -119,6 +146,7 @@
           <tbody *ngFor="let details of testcaseDetails">
             <tr>
               <td>{{details.runNumber}}</td>
+              <td>{{details.runsessionid}}</td>
               <td>{{details.number}}</td>
               <td>{{details.status}}</td>
               <td>{{details.exceptionmessage}}</td>
@@ -127,5 +155,3 @@
         </table>
       </div>
     </div>
-
-

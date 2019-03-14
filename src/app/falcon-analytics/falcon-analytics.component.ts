@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { TestReportService } from '../services/testReport.services';
 import { TestReportPassPercent } from '../models/testReportPassPercent.model';
 import { environment } from '../../environments/environment';
@@ -11,9 +11,15 @@ import { TestcaseDetails } from '../models/testcaseDetails.model';
 })
 export class FalconAnalyticsComponent{
 
-    @ViewChild('productName') productRef: ElementRef;
+    toggle=false;
+
+    runNumber:number;
+    numbers:Array<number>=[];
+    showDetails:boolean=false;
+    lastRuns:Array<number>=[1,2,3,4,5];
+
     testcaseDetails: Array<TestcaseDetails>;
-    noOfRuns: number = 5;
+    noOfRuns: number = 50;
     viewDetailsButton: boolean = false;
     compareTestcaseUpdated: boolean = false;
     compareTestcase: Array<number>;
@@ -21,10 +27,10 @@ export class FalconAnalyticsComponent{
     chartDetailsUpdated: boolean=false;
     showMainChart: boolean = false;
     dropdownValue:string="-----Select-----";
-  public chartData: Array<number>;
+    public chartData:Array<number>;
     public chartLabels: Array<number>;
     public testcaseChartData: Array<number>;
-    public testcaseChartLabels: Array<number>=[1,2,3,4,5];
+    public testcaseChartLabels: Array<number>=[];
     public testcaseChartOptions = {
       scaleShowVerticalLines: false,
       scales: {
@@ -50,6 +56,7 @@ export class FalconAnalyticsComponent{
     showChart = "hidden";
     showDiv: boolean = false;
 
+    //bar chart details
     public report: TestReportPassPercent;
     public chartType1 =environment.chartType1;
     public barChartLegend =false;
@@ -73,6 +80,7 @@ export class FalconAnalyticsComponent{
       }
     };
 
+    //pie chart details
     public chartType2=environment.chartType2;
     public pieChartOptions = {
     responsive: true,
@@ -86,8 +94,7 @@ export class FalconAnalyticsComponent{
         position: 'bottom'
       }};
 
-  constructor(private reportService:TestReportService) {
-  }
+  constructor(private reportService:TestReportService) {}
 
    /*function to subscribe to the database to retrieve required data*/
   submitProductName(product: string) {
@@ -136,9 +143,8 @@ export class FalconAnalyticsComponent{
         console.log(this.testcaseDetails);
       });
   }
-
-
-  //function to compare testcases in different runs
+  
+  //*function to compare testcases in different runs
   showTestcaseComparision(customer: string) {
     this.showChart = null;
     this.showComparisionChart = true;
@@ -148,7 +154,11 @@ export class FalconAnalyticsComponent{
         this.compareTestcase = data;
         console.log(this.compareTestcase);
         this.testcaseChartData = this.compareTestcase;
+        for (var i = 1; i <= this.compareTestcase.length ; i++) {
+          this.testcaseChartLabels.push(i);
+        } 
       });  
+      
     this.compareTestcaseUpdated = false;
   }
 }
