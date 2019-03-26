@@ -5,16 +5,22 @@
   width: 100%;
   position: fixed;
   padding-top: 20px;
-  margin-left: 200px;
-  margin-top: 50px;
-  padding-bottom: 60px;
+ margin-left: 30px;
+ margin-right: 30px;
+  margin-top: 0px;
+  padding-bottom: 80px;
+  /* padding-left:30px; */
 }
 
 .chart {
   overflow-x: auto;
   overflow-y: auto;
   margin-bottom: 15px;
-  width: 60%;
+  width:75%;
+}
+
+.testcaseChart{
+  width:100%;
 }
 
 .table {
@@ -52,4 +58,8 @@
 
 .mat-button-toggle .mat-button-focus-overlay {
   background-color: transparent;
+}
+
+.mat-label{
+  font-size: 22px;
 }

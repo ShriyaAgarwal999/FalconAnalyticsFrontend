@@ -17,9 +17,9 @@ export class TestReportService {
 
 
 /*http request to get data from database using springBoot*/
-  public getTestPassPercent(product: string, noOfRuns: number) {
-     return this.http.get<TestReportPassPercent>(environment.baseUrl + '/testReport/getDetails?productName=' + product + "&noOfRuns=" + noOfRuns);
-  }
+  public getTestPassPercent(product: string, noOfRuns: number, testphase:string) {
+     return this.http.get<TestReportPassPercent>(environment.baseUrl + '/testReport/getTestphaseDetails?productName=' + product + "&noOfRuns=" + noOfRuns+"&testphase="+testphase);
+    }
 
   /*http reuest to get history of test cases*/
   public getTestcaseHistory(customer: string, noOfRuns: number) {
@@ -28,6 +28,7 @@ export class TestReportService {
 
   //*http reuest to get testcase wise comparision
   public getTestcaseComparision(customer: string, noOfRuns: number) {
-    return this.http.get<Array<number>>(environment.baseUrl + '/testCase/testcaseCompare?customerName=' + customer + "&noOfRuns=" + noOfRuns);
-  }
+      return this.http.get<Array<number>>(environment.baseUrl + '/testCase/testcaseCompare?customerName=' + customer + "&noOfRuns=" + noOfRuns);
+      }
+
 }

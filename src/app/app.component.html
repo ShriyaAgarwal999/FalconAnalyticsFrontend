@@ -2,29 +2,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<!--Header-->
-<header class="navbar-fixed-top">
-  <h3 class="title">Dashboard</h3>
-</header>
-
-<!--Navigation bar-->
-<div class="row">
-  <div class="col l4">
-    <div class="sidenav" routerLinkActive="active">
-      <a routerLink="/falcon-analytics">Analytics</a>
-      <a routerLink="#">Runs</a>
-      <a routerLink="#">Products</a>
-      <a routerLink="#">Data</a>
-    </div>
-  </div>
-</div>
-
-<!-- Footer-->
-<footer class="app-footer">
-  <div>
-    <p>&copy; 2019 Falcon.com</p>
-  </div>
-</footer>
+<app-navigation></app-navigation>
 
 <router-outlet></router-outlet>
+
+<app-footer></app-footer>
+
 

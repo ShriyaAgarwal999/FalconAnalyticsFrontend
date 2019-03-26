@@ -3,6 +3,7 @@ import { TestReportService } from '../services/testReport.services';
 import { TestReportPassPercent } from '../models/testReportPassPercent.model';
 import { environment } from '../../environments/environment';
 import { TestcaseDetails } from '../models/testcaseDetails.model';
+import { MatRadioChange } from '@angular/material';
 
 @Component({
   selector: 'app-falcon-analytics',
@@ -10,24 +11,33 @@ import { TestcaseDetails } from '../models/testcaseDetails.model';
   styleUrls: ['./falcon-analytics.component.css']
 })
 export class FalconAnalyticsComponent{
+    toggleViewHistory=false;
 
-    toggle=false;
-
+    productNames=['Uber','Amazon','Flipkart'];
+    testphase=['Smoke','Regression'];
+    selectedTestphase:string;
     runNumber:number;
     numbers:Array<number>=[];
     showDetails:boolean=false;
-    lastRuns:Array<number>=[1,2,3,4,5];
+    hideDetails:boolean=true;
 
     testcaseDetails: Array<TestcaseDetails>;
-    noOfRuns: number = 50;
+    noOfRuns: number=50;
     viewDetailsButton: boolean = false;
     compareTestcaseUpdated: boolean = false;
     compareTestcase: Array<number>;
     showComparisionChart: boolean = false;
     chartDetailsUpdated: boolean=false;
     showMainChart: boolean = false;
-    dropdownValue:string="-----Select-----";
-    public chartData:Array<number>;
+
+dropdownValue:string="choose product";
+    
+    disableCharts:boolean=true;
+    runsIsDisabled:boolean=true;
+    isDisabled: boolean=true;
+    public chartDataTemp=[];
+    public chartLabelsTemp=[];
+    public chartData=[];
     public chartLabels: Array<number>;
     public testcaseChartData: Array<number>;
     public testcaseChartLabels: Array<number>=[];
@@ -51,15 +61,20 @@ export class FalconAnalyticsComponent{
       }
     };
 
-    showBar = "hidden";
-    showPie = "hidden";
+    // showBar = "hidden";
+    // showPie = "hidden";
     showChart = "hidden";
     showDiv: boolean = false;
 
     //bar chart details
     public report: TestReportPassPercent;
     public chartType1 =environment.chartType1;
-    public barChartLegend =false;
+    public barChartLegend =true;
+    public chartColors=[];
+    public colors=[{
+      backgroundColor:[],
+    }];
+    public chartDatasets=[{}];
     public barChartOptions = {
       scaleShowVerticalLines: false,
       scales: {
@@ -91,39 +106,69 @@ export class FalconAnalyticsComponent{
       },
       legend: {
         display: true,
-        position: 'bottom'
+        position: 'right'
       }};
 
   constructor(private reportService:TestReportService) {}
 
    /*function to subscribe to the database to retrieve required data*/
-  submitProductName(product: string) {
-    this.dropdownValue = product;
-    this.chartLabels = [];
-    this.reportService.getTestPassPercent(product, this.noOfRuns)
+  submitProductName(event: MatRadioChange) {
+    this.chartLabels=[];
+    this.reportService.getTestPassPercent(this.dropdownValue, this.noOfRuns, this.selectedTestphase)
       .subscribe(data => {
         this.report = data;
         this.chartDetailsUpdated = true;
-        console.log(this.report.passPercent);
-        console.log(this.report.runSessionId);
         this.chartData = this.report.passPercent;
-        //this.chartLabels = this.report.runSessionId;
+        this.chartLabels = this.report.runSessionId; 
+        for(var element=0; element<this.chartLabels.length;element++){
+          if(this.chartLabels[element]==0){
+            this.chartLabels.splice(element, 1);
+            this.chartData.splice(element,1);
+            element--;
+            console.log(element);
+          }
+          else{
+          if(this.selectedTestphase=="Regression" && parseInt(this.chartData[element],10)>=95){
+            this.chartColors[element]="rgba(46, 204, 113, 1)";  
+          }
+          else if(this.selectedTestphase=="Smoke" && parseInt(this.chartData[element],10)>=100){
+            this.chartColors[element]="rgba(46, 204, 113, 1)";
+          }
+          else{    
+            this.chartColors[element]="rgba(255, 0, 0, 1)";
+          }
+          }
+          }
+            this.chartDatasets=[{
+              data:this.chartData,
+              label:"No GO",
+              
+            },
+          {
+            data:null,
+            label:"GO",
+            strokeColor : "rgba(46, 204, 113, 1)", 
+          }]; 
+           this.colors=[{
+            backgroundColor:this.chartColors,
+            }];
       });
-    for (var i = 0; i < this.noOfRuns; i++) {
-      this.chartLabels.push(i+1);
-    }
+      
+      for (var i = 0; i < this.noOfRuns; i++) {
+        this.chartLabels.push(i+1);
+      }
     this.chartDetailsUpdated = false;
     this.showMainChart = false;
   }
 
-  showBarChart() {
-    this.showBar = null;
-    this.showPie = "hidden";
-  }
-  showPieChart() {
-    this.showPie = null;
-    this.showBar = "hidden";
-  }
+  // showBarChart() {
+  //   this.showBar = null;
+  //   this.showPie = "hidden";
+  // }
+  // showPieChart() {
+  //   this.showPie = null;
+  //   this.showBar = "hidden";
+  // }
 
   /*show details if view history button is clicked*/
   showHistory(customer:string) {

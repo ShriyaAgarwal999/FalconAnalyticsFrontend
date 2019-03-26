@@ -11,19 +11,23 @@ import { ChartsModule } from 'ng2-charts';
 import {HttpClientModule} from "@angular/common/http";
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material.module'
+import { MaterialModule } from './material.module';
+import { NavigationComponent } from './navigation/navigation.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import { FooterComponent } from './footer/footer.component';
+import { FormsModule } from '@angular/forms';
 
 const appRoutes: Routes=[
-{path: '', component: AppComponent},
 {path: 'falcon-analytics', component: FalconAnalyticsComponent}
-
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    FalconAnalyticsComponent
-
+    FalconAnalyticsComponent,
+    NavigationComponent,
+    FooterComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -31,7 +35,9 @@ const appRoutes: Routes=[
     HttpClientModule,
     ChartsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    FlexLayoutModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,122 +2,135 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <div class="container"> 
-  <!--Product name dropdown-->
-  <div class="row">
-    <div class="col-sm-3">
-      <label class="labelValue">
-        Product name:
-      </label>
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle col-xs-10" type="button" data-toggle="dropdown">
-          {{dropdownValue}}<span class="caret"></span>
-        </button>
-        <div class="dropdown-content">
-        <ul class="dropdown-menu scrollable-menu col-xs-10" role="menu">
-          <li>
-            <div (click)="submitProductName('Uber',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Uber   </div>
-          </li>
-          <li>
-            <div (click)="submitProductName('Amazon',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Amazon   </div>
-          </li>
-          <li>
-            <div (click)="submitProductName('Flipkart',noOfRuns)" (click)="showBarChart()" (click)="viewDetailsButton=false">Flipkart   </div>
-          </li>
-        </ul>
-        </div>
+    <div class="row">
+        <!--Product name dropdown-->
+        <div class="col-sm-3">
+        <mat-form-field appearance="legacy">
+          <mat-label>Product name</mat-label>
+          <mat-select placeholder={{dropdownValue}}> 
+            <mat-option *ngFor="let productName of productNames" 
+            [value]="productName" 
+            (click)="dropdownValue=productName" 
+            (click)="viewDetailsButton=false"
+            (click)="runsIsDisabled=false"> 
+                {{productName}}
+          </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-    </div>
     <!--No of runs dropdown-->
-    <div class="col-sm-3" *ngIf="dropdownValue!== '-----Select-----'">
-      <label class="labelValue">
-        Number of runs:
-      </label>
-      <div class="dropdown" >
-        <button class="btn btn-primary dropdown-toggle col-xs-10" type="button" data-toggle="dropdown">
-          {{noOfRuns}}    <span class="caret"></span>
-        </button>
-        <div class="dropdown-content">
-        <ul class="dropdown-menu scrollable-menu col-xs-10" role="menu">
-          <li>
-            <div (click)="noOfRuns=10" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false" >10  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=20" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">20  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=30" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">30  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=40" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">40  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=50" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">50  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=60" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">60  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=70" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">70  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=80" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">80  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=90" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">90  </div>
-          </li>
-          <li>
-            <div (click)="noOfRuns=100" (click)="submitProductName(dropdownValue,noOfRuns)" (click)="viewDetailsButton=false">100  </div>
-          </li>
-        </ul>
-      </div>
-      </div>
+      <div class="col-sm-3">
+        <mat-form-field appearance="legacy">
+            <mat-label>Number of runs</mat-label>
+          <mat-select placeholder={{dropdownValue}} style="min-width:200px;" [disabled]="runsIsDisabled">
+            <mat-option *ngFor="let num of [10, 20, 30, 40, 50,60,70,80,90,100]"
+            [value]="num"
+            (click)="noOfRuns=num"
+             (click)="viewDetailsButton=false"
+             (click)="isDisabled=false"
+             (click)="selectedTestphase=''"
+             >{{num}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
     </div>
-    </div>
+  </div>
+<br/>
+    <h4><mat-label>Pick the testphase:</mat-label></h4>
+    <!-- <mat-toolbar color="accent">
+        <span>Pick the testphase</span> 
+    </mat-toolbar> -->
+    <br/>
+    <mat-radio-group [(ngModel)]="selectedTestphase" (change)="submitProductName($event)" (change)="compareTestcaseUpdated=false" [disabled]="isDisabled">
+        <!-- <mat-radio-button *ngFor="let testphase of testphase" 
+        (click)="submitProductName(dropdownValue,noOfRuns,selectedTestphase)"
+        (click)="selectedTestphase=testphase">{{testphase}}
+       </mat-radio-button> -->
+        <mat-radio-button [value]=testphase[0]>{{testphase[0]}}   
+        </mat-radio-button>
+        <mat-radio-button [value]=testphase[1]> {{testphase[1]}}
+        </mat-radio-button>
+    </mat-radio-group>
+        <!-- <h4>Pick the testphase</h4>
+        <section >
+          <mat-radio-group [(ngModel)]="testphase" [disabled]="isDisabled">
+            <mat-radio-button value="Smoke" (click)="submitProductName(dropdownValue,noOfRuns,'Smoke')">Smoke</mat-radio-button>
+            <mat-radio-button value="Regression" (click)="submitProductName(dropdownValue,noOfRuns,'Regression')"> Regression</mat-radio-button>
+            <mat-radio-button value="Both" (click)="submitProductName(dropdownValue,noOfRuns,'Both')">Both</mat-radio-button>
+          </mat-radio-group>
+        </section> -->
       <br />
       <br />
-      <div *ngIf="dropdownValue!== '-----Select-----'">
-        <!---
-        <button type="button" class="btn btn-primary" (click)="showBarChart()">Bar chart</button>
-        <button type="button" class="btn btn-primary" (click)="showPieChart()">Pie chart</button>
-      
-        <mat-button-toggle-group>
-            <mat-button-toggle (click)="showBarChart()">Bar chart</mat-button-toggle>
-            <mat-button-toggle (click)="showPieChart()">Pie chart</mat-button-toggle>
-        </mat-button-toggle-group>-->
-
+    <!-- <div *ngIf="disableCharts==false">
         <mat-button-toggle-group>        
                 <button mat-raised-button [color]="!showBar ? 'primary' : 'accent'" (click)="showBarChart()"  >Bar chart</button>
                 <button mat-raised-button [color]="!showPie ? 'primary' : 'accent'" (click)="showPieChart()"  >Pie chart</button>
         </mat-button-toggle-group>
-    </div>
-      <br />
-      <br />
-      <br />
+    </div> -->
+      <br />  
       <div class="chart" *ngIf="report">
-        <!--Bar chart-->
-        <div class="{{showBar}}" *ngIf="chartDetailsUpdated">
+          <mat-toolbar color="accent">
+              <span>Bar Chart</span> 
+          </mat-toolbar>
+        
+          <!--Bar chart-->
+        <!-- <div class="{{showBar}}" *ngIf="chartDetailsUpdated"> -->
+        <div *ngIf="chartDetailsUpdated"> 
           <canvas baseChart
-                  [data]="chartData"
-                  [labels]="chartLabels"
+                  [datasets]="chartDatasets"  
+                  [colors]="colors"
+                  [labels]="chartLabels" 
                   [options]="barChartOptions"
                   [legend]="barChartLegend"
                   [chartType]="chartType1"></canvas>
         </div>
         <br />
+        <br/>
         <!--Pie chart-->
-        <div class="{{showPie}}" *ngIf="chartDetailsUpdated">
-          <canvas baseChart
+        <!-- <div class="{{showPie}}" *ngIf="chartDetailsUpdated"> -->
+        <div *ngIf="chartDetailsUpdated">
+                <mat-toolbar color="accent">
+                    <span>Pie Chart</span> 
+                </mat-toolbar>
+         <canvas baseChart
                   [data]="chartData"
                   [labels]="chartLabels"
                   [options]="pieChartOptions"
-                  [chartType]="chartType2"></canvas>
+                  [chartType]="chartType2">
+         </canvas>
         </div>
-        <button mat-raised-button [color]="showMainChart ? 'primary' : 'accent'" (click)="showHistory(dropdownValue)" (click)="compareTestcaseUpdated=false">View Details</button>
+        <br/>
+        <br/>
+
+        <mat-toolbar color="accent">
+            <span>Details</span> 
+        </mat-toolbar>
+        <br/>
+
+        <!--show details button--->
+        <button *ngIf="hideDetails"
+         mat-raised-button [color]="showMainChart ? 'primary' : 'accent'" 
+         (click)="showHistory(dropdownValue)" 
+         (click)="compareTestcaseUpdated=false"
+         (click)="hideDetails=false">View Details</button>
+        <br/>
+        <br/>
+        <!-- hide details button  -->
+        <button *ngIf="!hideDetails"
+         mat-raised-button [color]="hideDetails ? 'primary' : 'accent'"  
+         (click)="viewDetailsButton=false"
+         (click)="hideDetails=true">Hide Details
+        </button>
         <br/>
         <br/>
         <div *ngIf="viewDetailsButton">
-          <button mat-raised-button [color]="showComparisionChart ? 'primary' : 'accent'" *ngIf="showMainChart" (click)="showTestcaseComparision(dropdownValue)">Show Testcase-wise Comparision</button>
-          <div class="chart" *ngIf="showComparisionChart">
+          <button mat-raised-button [color]="showComparisionChart ? 'primary' : 'accent'" 
+            *ngIf="showMainChart" 
+            (click)="showTestcaseComparision(dropdownValue)">Show Testcase-wise Comparision
+          </button>
+          <br/>
+          <br/>
+          <div class="testcaseChart" *ngIf="showComparisionChart">
             <br />
             <br />
             <!--Testcase Comparision chart-->
@@ -126,28 +139,31 @@
                       [data]="testcaseChartData"
                       [labels]="testcaseChartLabels"
                       [options]="testcaseChartOptions"
-                      [legend]="barChartLegend"
-                      [chartType]="chartType1"></canvas>
+                      [legend]='false'
+                      [chartType]="chartType1">
+              </canvas>
             </div>
           </div>
+          <br/>
+          <br/>
         </div>
         
         <!--Table showing the details of the last runs-->
-        <table class="table table-hover table-sm header-fixed" *ngIf="showMainChart">
+        <table class="table table-hover table-sm header-fixed" *ngIf="showMainChart && !hideDetails" >
           <thead class="thead-dark">       
             <tr>
+              <th scope="col">Testcase Number</th>
               <th scope="col">Run Number</th>
               <th scope="col">Run session ID</th>
-              <th scope="col">Testcase Number</th>
               <th scope="col">Run Status</th>
               <th scope="col">Exception message</th>
             </tr>
           </thead>
           <tbody *ngFor="let details of testcaseDetails">
             <tr>
+              <td>{{details.number}}</td>
               <td>{{details.runNumber}}</td>
               <td>{{details.runsessionid}}</td>
-              <td>{{details.number}}</td>
               <td>{{details.status}}</td>
               <td>{{details.exceptionmessage}}</td>
             </tr>

@@ -1,0 +1,48 @@
+
+<mat-sidenav-container>
+  <mat-sidenav  #sidenav mode="side" #sidenav role="navigation">
+   <mat-nav-list>
+    <a mat-list-item (click)="selectedOption=options[0]"
+    routerLink="/">
+      <mat-icon class="icon">input</mat-icon>
+        <span class="label">{{options[0]}}</span>
+    </a>
+    <a mat-list-item (click)="selectedOption=options[1]"
+    routerLink="/">
+      <mat-icon class="icon">home</mat-icon>
+        <span class="label">{{options[1]}}</span>
+    </a>
+    <a mat-list-item
+    routerLink="/falcon-analytics" (click)="selectedOption=options[2]">
+      <mat-icon class="icon">dashboard</mat-icon>
+        <span class="label">{{options[2]}}</span>
+    </a>
+    
+    <a  mat-list-item type="button" (click)="selectedOption=options[3]"
+    routerLink="/">
+      <mat-icon class="icon">input</mat-icon>
+        <span class="label">{{options[3]}}</span>
+    </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+        <div>
+          <button mat-button (click)="sidenav.toggle()">
+              <mat-icon class="icon">list</mat-icon>     
+          </button>
+        </div>
+        <div>
+          <a>
+          {{selectedOption}}
+          </a>
+        </div>
+        
+    </mat-toolbar>
+
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
