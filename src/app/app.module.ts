@@ -15,10 +15,14 @@ import { MaterialModule } from './material.module';
 import { NavigationComponent } from './navigation/navigation.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { FooterComponent } from './footer/footer.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 
 const appRoutes: Routes=[
-{path: 'falcon-analytics', component: FalconAnalyticsComponent}
+{path: 'falcon-analytics', component: FalconAnalyticsComponent},
+{path: 'login', component: AppComponent},
+{path: 'logout', component: AppComponent},
+{path: 'home', component: AppComponent}
+
 ];
 
 @NgModule({
@@ -37,7 +41,8 @@ const appRoutes: Routes=[
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

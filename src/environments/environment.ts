@@ -7,6 +7,8 @@ export const environment = {
   baseUrl:'http://30.30.30.63:9000',
   chartType1: 'bar',
   chartType2: 'pie',
+  regressionPassPercent: 95,
+  smokePassPercent: 100,
 };
 
 /*

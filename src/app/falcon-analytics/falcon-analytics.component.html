@@ -3,33 +3,39 @@
 </head>
 <div class="container"> 
     <div class="row">
-        <!--Product name dropdown-->
+        <!-- Product name dropdown -->
         <div class="col-sm-3">
-        <mat-form-field appearance="legacy">
-          <mat-label>Product name</mat-label>
-          <mat-select placeholder={{dropdownValue}}> 
-            <mat-option *ngFor="let productName of productNames" 
-            [value]="productName" 
-            (click)="dropdownValue=productName" 
-            (click)="viewDetailsButton=false"
-            (click)="runsIsDisabled=false"> 
-                {{productName}}
-          </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+        <form class="productform">
+          <mat-form-field appearance="legacy">
+            <input type="text" placeholder="Enter Product Name" aria-label="Product name" 
+            matInput [formControl]="myControl" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" 
+                [value]="option"
+                (onSelectionChange)="dropdownValue=option"
+                (onSelectionChange)="viewDetailsButton=false"
+                (onSelectionChange)="runsIsDisabled=false"
+                (onSelectionChange)="report=[]"
+                (onSelectionChange)="refresh=true">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div> 
+
     <!--No of runs dropdown-->
       <div class="col-sm-3">
         <mat-form-field appearance="legacy">
-            <mat-label>Number of runs</mat-label>
-          <mat-select placeholder={{dropdownValue}} style="min-width:200px;" [disabled]="runsIsDisabled">
-            <mat-option *ngFor="let num of [10, 20, 30, 40, 50,60,70,80,90,100]"
+            <mat-label>Number of last runs</mat-label>
+          <mat-select placeholder={{noOfRuns}} style="min-width:200px;" [disabled]="runsIsDisabled">
+            <mat-option *ngFor="let num of [5,10, 20, 30, 40, 50]"
             [value]="num"
             (click)="noOfRuns=num"
-             (click)="viewDetailsButton=false"
+             (click)="viewDetailsButton=true"
              (click)="isDisabled=false"
              (click)="selectedTestphase=''"
-             >{{num}}
+             (onSelectionChange)="hideDetails=true">{{num}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -37,11 +43,14 @@
   </div>
 <br/>
     <h4><mat-label>Pick the testphase:</mat-label></h4>
-    <!-- <mat-toolbar color="accent">
-        <span>Pick the testphase</span> 
-    </mat-toolbar> -->
     <br/>
-    <mat-radio-group [(ngModel)]="selectedTestphase" (change)="submitProductName($event)" (change)="compareTestcaseUpdated=false" [disabled]="isDisabled">
+    <mat-radio-group [(ngModel)]="selectedTestphase" 
+    (change)="showDetailsOfTestrun($event)" 
+    (change)="compareTestcaseUpdated=false"
+    (change)="viewDetailsButton=true"
+    (change)="hideDetails=true"
+    (change)="showtable=false"
+    [disabled]="isDisabled">
         <!-- <mat-radio-button *ngFor="let testphase of testphase" 
         (click)="submitProductName(dropdownValue,noOfRuns,selectedTestphase)"
         (click)="selectedTestphase=testphase">{{testphase}}
@@ -51,14 +60,6 @@
         <mat-radio-button [value]=testphase[1]> {{testphase[1]}}
         </mat-radio-button>
     </mat-radio-group>
-        <!-- <h4>Pick the testphase</h4>
-        <section >
-          <mat-radio-group [(ngModel)]="testphase" [disabled]="isDisabled">
-            <mat-radio-button value="Smoke" (click)="submitProductName(dropdownValue,noOfRuns,'Smoke')">Smoke</mat-radio-button>
-            <mat-radio-button value="Regression" (click)="submitProductName(dropdownValue,noOfRuns,'Regression')"> Regression</mat-radio-button>
-            <mat-radio-button value="Both" (click)="submitProductName(dropdownValue,noOfRuns,'Both')">Both</mat-radio-button>
-          </mat-radio-group>
-        </section> -->
       <br />
       <br />
     <!-- <div *ngIf="disableCharts==false">
@@ -68,106 +69,226 @@
         </mat-button-toggle-group>
     </div> -->
       <br />  
-      <div class="chart" *ngIf="report">
+      <div class="details" *ngIf="report && !refresh">
           <mat-toolbar color="accent">
               <span>Bar Chart</span> 
           </mat-toolbar>
         
           <!--Bar chart-->
         <!-- <div class="{{showBar}}" *ngIf="chartDetailsUpdated"> -->
-        <div *ngIf="chartDetailsUpdated"> 
+      <div class="row">
+                
+        <div class="col-sm-7">
+        <div class="chart" *ngIf="chartDetailsUpdated"> 
+        
           <canvas baseChart
-                  [datasets]="chartDatasets"  
+                  [datasets]="chartData"
                   [colors]="colors"
                   [labels]="chartLabels" 
                   [options]="barChartOptions"
                   [legend]="barChartLegend"
                   [chartType]="chartType1"></canvas>
         </div>
-        <br />
-        <br/>
-        <!--Pie chart-->
-        <!-- <div class="{{showPie}}" *ngIf="chartDetailsUpdated"> -->
-        <div *ngIf="chartDetailsUpdated">
-                <mat-toolbar color="accent">
-                    <span>Pie Chart</span> 
-                </mat-toolbar>
-         <canvas baseChart
-                  [data]="chartData"
-                  [labels]="chartLabels"
-                  [options]="pieChartOptions"
-                  [chartType]="chartType2">
-         </canvas>
         </div>
         <br/>
-        <br/>
+        <div class="col-sm-5">
+       <div class="runDetails">
+        <mat-toolbar class="toolbar" color="primary">
+            <h3 mat-subheader>{{dropdownValue}} {{selectedTestphase}} Testruns Detail</h3>
+        </mat-toolbar>
+        <mat-divider></mat-divider>
+        <mat-toolbar class="subToolbar" >
+          <span>No of Testruns Available = {{totalRuns}}</span>
+        </mat-toolbar>
+        <mat-divider></mat-divider>
+          <mat-toolbar class="subToolbar">
+            <span>No of Testruns Selected = {{noOfRuns}}</span>
+          </mat-toolbar>
+          <mat-divider></mat-divider>
+          <mat-toolbar  class="subToolbar" *ngIf='selectedTestphase=="Regression"'>
+            <span>GO(>={{regressionPassPercent}}%) = {{goData}}</span>
+          </mat-toolbar>
+          <mat-divider></mat-divider>
+          <mat-toolbar  class="subToolbar" *ngIf='selectedTestphase=="Regression"'>
+            <span>No GO(<={{regressionPassPercent}}%) = {{noGoData}}</span>
+          </mat-toolbar>
+          <mat-toolbar  class="subToolbar" *ngIf='selectedTestphase=="Smoke"'>
+              <span>GO(=={{smokePassPercent}}%) = {{goData}}</span>
+            </mat-toolbar>
+            <mat-divider></mat-divider>
+            <mat-toolbar  class="subToolbar" *ngIf='selectedTestphase=="Smoke"'>
+              <span>No GO(<={{smokePassPercent}}%) = {{noGoData}}</span>
+            </mat-toolbar>
+          <mat-divider></mat-divider>
+          </div>
+          </div>
+          </div>
+        <br/> 
+<br/>
+<br/>
 
         <mat-toolbar color="accent">
-            <span>Details</span> 
+            <span>Details of Testcases</span> 
         </mat-toolbar>
         <br/>
 
         <!--show details button--->
-        <button *ngIf="hideDetails"
+        <button *ngIf="hideDetails && viewDetailsButton"
          mat-raised-button [color]="showMainChart ? 'primary' : 'accent'" 
-         (click)="showHistory(dropdownValue)" 
+         (click)="viewDetailsButton=false"
          (click)="compareTestcaseUpdated=false"
          (click)="hideDetails=false">View Details</button>
-        <br/>
         <br/>
         <!-- hide details button  -->
         <button *ngIf="!hideDetails"
          mat-raised-button [color]="hideDetails ? 'primary' : 'accent'"  
-         (click)="viewDetailsButton=false"
-         (click)="hideDetails=true">Hide Details
+         (click)="viewDetailsButton=true"
+         (click)="hideDetails=true"
+         (click)="showtable=false">Hide Details
         </button>
         <br/>
-        <br/>
-        <div *ngIf="viewDetailsButton">
-          <button mat-raised-button [color]="showComparisionChart ? 'primary' : 'accent'" 
-            *ngIf="showMainChart" 
-            (click)="showTestcaseComparision(dropdownValue)">Show Testcase-wise Comparision
-          </button>
-          <br/>
-          <br/>
-          <div class="testcaseChart" *ngIf="showComparisionChart">
-            <br />
-            <br />
-            <!--Testcase Comparision chart-->
-            <div class="{{showChart}}" *ngIf="compareTestcaseUpdated">
-              <canvas baseChart
-                      [data]="testcaseChartData"
-                      [labels]="testcaseChartLabels"
-                      [options]="testcaseChartOptions"
-                      [legend]='false'
-                      [chartType]="chartType1">
-              </canvas>
-            </div>
-          </div>
-          <br/>
-          <br/>
+ 
+
+
+      
+<br/>
+
+        <div class="row">
+        <div class="col-sm-3" *ngIf="!viewDetailsButton || showtable">
+            <mat-form-field appearance="legacy">
+                <mat-label>Choose the run</mat-label>
+              <mat-select style="min-width:200px;" [(value)]="runNumber">
+                <mat-option *ngFor="let num of runs"
+                [value]="num"
+                (onSelectionChange)="getThisTestRunDetails($event)"
+                (onSelectionChange)="browserIsDisabled=false">{{num}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
         </div>
-        
-        <!--Table showing the details of the last runs-->
-        <table class="table table-hover table-sm header-fixed" *ngIf="showMainChart && !hideDetails" >
-          <thead class="thead-dark">       
-            <tr>
-              <th scope="col">Testcase Number</th>
-              <th scope="col">Run Number</th>
-              <th scope="col">Run session ID</th>
-              <th scope="col">Run Status</th>
-              <th scope="col">Exception message</th>
-            </tr>
-          </thead>
-          <tbody *ngFor="let details of testcaseDetails">
-            <tr>
-              <td>{{details.number}}</td>
-              <td>{{details.runNumber}}</td>
-              <td>{{details.runsessionid}}</td>
-              <td>{{details.status}}</td>
-              <td>{{details.exceptionmessage}}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="col-sm-3" *ngIf="!viewDetailsButton || showtable">
+            <mat-form-field appearance="legacy">
+                <mat-label>Choose browser</mat-label>
+              <mat-select [placeholder]="selectedBrowser" style="min-width:200px;"
+              [(value)]="selectedBrowser"
+              [disabled]="browserIsDisabled">
+                <mat-option *ngFor="let browser of browsers"
+                [value]="browser"
+                (onSelectionChange)="osIsDisabled=false"
+                (onSelectionChange)="getThisTestRunDetails($event)">{{browser}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3" *ngIf="!viewDetailsButton || showtable">
+            <mat-form-field appearance="legacy">
+                <mat-label>Choose OS</mat-label>
+              <mat-select [placeholder]="selectedOs" style="min-width:200px;"
+              [(value)]="selectedOs"
+              [disabled]="osIsDisabled">
+                <mat-option *ngFor="let os of os"
+                [value]="os"
+                (onSelectionChange)="getThisTestRunDetails($event)">{{os}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>     
+        <div class="col-sm-3" *ngIf="!viewDetailsButton || showtable">
+          <mat-form-field appearance="legacy">
+              <mat-label>Choose Test Status</mat-label>
+            <mat-select [placeholder]="selectedStatus" style="min-width:200px;"
+            [(value)]="selectedStatus">
+              <mat-option *ngFor="let status of status"
+              [value]="status"
+              (onSelectionChange)="getThisTestRunDetails($event)">{{status}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>           
       </div>
+      <br/>
+      <div class="testreport" *ngIf="showtable"> 
+          <table mat-table [dataSource]="datasource" class="mat-elevation-z8">
+            <ng-container matColumnDef="testcaseNumber">
+              <th mat-header-cell *matHeaderCellDef>Testcase ID</th>
+              <td mat-cell *matCellDef="let details"> {{details.number}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="duration">
+                <th mat-header-cell *matHeaderCellDef>Duration </th>
+                <td mat-cell *matCellDef="let details"> {{details.durationms}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="browser">
+                <th mat-header-cell *matHeaderCellDef>Browser </th>
+                <td mat-cell *matCellDef="let details"> {{details.browser}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="os">
+                <th mat-header-cell *matHeaderCellDef> OS </th>
+                <td mat-cell *matCellDef="let details"> {{details.os}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Run Status </th>
+                <td mat-cell *matCellDef="let details"> {{details.status}} </td>
+            </ng-container>
+            
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+          <tr mat-row *matRowDef="let details; columns: columnsToDisplay;"></tr>
+         </table>
+  
+         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          
+      </div>
+
+         <!-- Pie chart-->
+            <mat-toolbar color="accent">
+                <span>Conclusion</span> 
+            </mat-toolbar> 
+            <div class="row">
+                
+              <div class="col-sm-6">
+            <div class="chart2" *ngIf="pieChartDetailsUpdated">
+                <canvas baseChart
+                         [data]="pieChartData"
+                         [labels]="pieChartLabels"
+                         [colors]="pieChartColors"
+                         [options]="pieChartOptions"
+                         [chartType]="chartType2">
+                </canvas>
+            </div>
+            </div>
+            <div class="col-sm-6" >
+              <div class="runDetails" *ngIf="pieChartDetailsUpdated">
+               <mat-toolbar class="toolbar" color="primary">
+                   <h3 mat-subheader>Last 5 Testrun status:</h3>
+               </mat-toolbar>
+               <mat-divider></mat-divider>
+               <mat-toolbar class="subToolbar" >
+                 <span>Testrun 1: {{results[0]}}</span>
+               </mat-toolbar>
+               <mat-divider></mat-divider>
+                 <mat-toolbar class="subToolbar">
+                   <span>Testrun 2: {{results[1]}}</span>
+                 </mat-toolbar>
+                 <mat-divider></mat-divider>
+                 <mat-toolbar  class="subToolbar">
+                     <span>Testrun 3: {{results[2]}}</span>
+                   </mat-toolbar>
+                   <mat-divider></mat-divider>
+                   <mat-toolbar  class="subToolbar">
+                     <span>Testrun 4: {{results[3]}}</span>
+                   </mat-toolbar>
+                   <mat-divider></mat-divider>
+                   <mat-toolbar  class="subToolbar">
+                       <span>Testrun 5: {{results[4]}}</span>
+                     </mat-toolbar>
+                 <mat-divider></mat-divider>
+                 </div>
+                 </div>
+                 </div>
+          <br/>
+          <br/>
     </div>
+</div>

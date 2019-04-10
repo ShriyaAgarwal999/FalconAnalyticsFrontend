@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
 
-  options=['Login','Home','Analytics','Logout'];
+  options=['Login','Analytics','Logout'];
   selectedOption:string;
   
   constructor() { }

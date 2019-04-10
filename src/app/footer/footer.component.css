@@ -4,6 +4,7 @@ footer {
     height: 30px;
     bottom: 0;
     width: 100%;
+    text-align: center;
+    background-color: aliceblue;
    /* margin-left:185px;*/
-    background-color:rgb(129, 76, 179);
 }

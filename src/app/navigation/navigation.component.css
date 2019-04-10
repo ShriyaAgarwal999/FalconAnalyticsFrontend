@@ -45,3 +45,7 @@ mat-sidenav-container, mat-sidenav-content, mat-sidenav {
     font-size: 24px;
  
   } 
+
+  .active-list-item {
+    color: #ffd740; /* Note: You could also use a custom theme */
+  }

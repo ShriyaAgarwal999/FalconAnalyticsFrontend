@@ -1,27 +1,28 @@
 export class TestcaseDetails {
+
+  number:number;
   name:string;
   status: string;
+  durationms:number;
   exceptionmessage: string;
+  modulename:string;
+  customername:string;
+  browser:string;
+  os:string;
   runsessionid: number;
-  number: number;
-  runNumber: number;
 
-  constructor(name: string, status: string, exceptionmessage: string, runsessionid: number, number: number, runNumber: number) {
-    this.name = name;
+  constructor(number: number,name: string, status: string,durationms:number, exceptionmessage: string, 
+    modulename:string,customername:string,browser:string,os:string, runsessionid: number) {
+      this.number = number;
+      this.name = name;
     this.status = status;
+    this.durationms=durationms;
     this.exceptionmessage = exceptionmessage;
+    this.modulename=modulename;
+    this.customername=customername;
+    this.os=os;
     this.runsessionid = runsessionid;
-    this.number = number;
-    this.runNumber= runNumber;
-  }
-  get getNumber(): number {
-    return this.number;
-  }
-  set setNumber(number: number) {
-    this.number = number;
-  }
-  set setRunNumber(runNumber: number) {
-    this.runNumber = runNumber;
+    this.browser=browser;
   }
 
 }
